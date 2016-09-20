@@ -1,0 +1,25 @@
+{
+  "name": "sm2d",
+  "version": "1.0.0",
+  "description": "SimpleMath2D, Sm2D for short is very simple 2D JS library to draw points, vectors, arc, parabola...",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chtimi59/sm2d.js.git"
+  },
+  "author": "Jan D'Orgeville",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chtimi59/sm2d.js/issues"
+  },
+  "homepage": "https://github.com/chtimi59/sm2d.js#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-contrib-watch": "^1.0.0"
+  }
+}

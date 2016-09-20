@@ -1,0 +1,75 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="sm2d.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<script src="sm2d.js"></script>
+</head>
+<body oncontextmenu="return false">
+
+
+<div class="box" id="myControl" style="top: 50px; left: 20px;">
+  <ul>
+  <li>radius : <input id="radius" type="text" value="8"/></li>
+  <li>startAngle : <input id="startAngle" type="text" value="nil"/></li>
+  <li>stopAngle: <input id="stopAngle" type="text" value="nil"/></li>
+  <li>isYellow: <select id="isYellow" value="1"><option value="1">True</option><option value="0">False</option></select></li>
+  </ul>
+  <input value="Clear" type="button" onclick="onClear();" />
+  <input value="Draw" type="button" onclick="onClick();" />
+</div>
+
+<div class="box" id="myLabel" style="top: 440px; left: 70px;">
+<input id="position" type="text" value=""/>
+</div>
+
+<center><canvas id="myCanvas" width="700" height="700"></canvas></center>
+<textarea id="myLog" rows="6"></textarea>
+
+
+<script>
+var ctx = new Sm2D("myCanvas","myLog",-10,10,-20,20);
+ctx.addControlPanel("myControl");
+ctx.addControlPanel("myLabel");
+ctx.mouseMoveListener = function(pt,evt) {
+	document.getElementById("position").value = pt.str();
+}
+ctx.mouseClickListener = function(pt,evt) {
+	switch (evt.button) {
+		case 0: document.getElementById("position").style.backgroundColor = "red"; break;
+		case 1: document.getElementById("position").style.backgroundColor = "blue"; break;
+		case 2: document.getElementById("position").style.backgroundColor = "black"; break;
+	}
+	
+	ctx.dot(pt);
+}
+
+function onClear() {
+  ctx.clear();
+}
+
+function onClick() {	
+	
+	var radius = Number(document.getElementById("radius").value);
+	if (isNaN(radius) || radius<=0 ) radius = null;
+
+	var startAngle = Number(document.getElementById("startAngle").value);	
+	if (isNaN(startAngle)) startAngle = null;
+	if (startAngle) startAngle = Math.PI * startAngle/180;
+
+	var stopAngle = Number(document.getElementById("stopAngle").value);	
+	if (isNaN(stopAngle)) stopAngle = null;
+	if (stopAngle) stopAngle = Math.PI * stopAngle/180;
+
+ 	var isYellow = Number( document.getElementById("isYellow").value);
+
+	var a = ctx.createArc(ctx.createPoint(0,0),radius,startAngle,stopAngle);
+
+	ctx.log(a.str());
+	ctx.arc(a,"", isYellow?"yellow":"cyan",true);
+}
+
+
+</script>
+
+</body>
+</html>

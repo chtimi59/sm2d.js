@@ -1,0 +1,43 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="sm2d.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<script src="sm2d.js"></script>
+</head>
+<body>
+
+<div class="box" id="myLabel" style="top: 20px; left: 20px;">
+<ul>
+<li>local position:<input id="localPos" type="text" value=""/></li>
+<li>world position:<input id="worldPos" type="text" value=""/></li>
+</ul>
+</div>
+
+<center><canvas id="myCanvas" width="1000" height="1000"></canvas></center>
+<textarea id="myLog" rows="6"></textarea>
+
+
+<script>
+var ctx = new Sm2D("myCanvas","myLog",-10,10,-10,10);
+ctx.addControlPanel("myLabel");
+ctx.mouseMoveListener = function(pt,evt) {
+	document.getElementById("worldPos").value = pt.str();
+	var p2 = ctx.world2local(o,i,j,pt);
+	document.getElementById("localPos").value = p2.str();
+}
+	
+
+var o = ctx.createPoint(5,3);
+var i = ctx.createVectorFromAngle(o, Math.PI/8, 1);
+var j = ctx.createVectorFromAngle(o, 3*Math.PI/8, 2);
+ctx.ray(i,"i","red");
+ctx.ray(j,"j","blue");
+
+var p1 = ctx.createPoint(2,1);
+var p2 = ctx.local2world(o,i,j,p1);
+ctx.dot(p2);
+
+</script>
+
+</body>
+</html>
