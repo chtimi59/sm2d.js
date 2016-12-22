@@ -1,17 +1,20 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="sm2d.css">
-<script src="sm2d.js"></script>
+<link rel="stylesheet" type="text/css" href="../dist/sm2d.css">
+<script src="../dist/sm2d.js"></script>
 </head>
-<body>
 
-<center><canvas id="myCanvas" width="700" height="700"></canvas></center>
-<textarea id="myLog" rows="6"></textarea>
+<body style="background-color: black; color: #CCC; margin:0px;">
 
+<center>
+<canvas class="sm2d" id="myCanvas" width="700" height="700"></canvas>
+</center>
+
+<textarea class="sm2d" id="myLog" rows="6"></textarea>
 
 <script>
-var ctx = new Sm2D("myCanvas","myLog",-10,10,-10,10);
-
+var ctx = new Sm2D("myCanvas",-10,10,-10,10);
+ctx.attachLog("myLog");
 
 ctx.log("-- numbers to strings convertion -- ");
 var v = Math.PI/4;
@@ -20,14 +23,10 @@ ctx.log(ctx.f2str(v));
 ctx.log(ctx.rad2str(v,2));
 ctx.log(ctx.f2str(v,2));
 
-
-
 ctx.log("-- Point 1 -- ");
 var p1 = ctx.createPoint(1,2);
 ctx.log(p1.str());
-ctx.dot(p1,null);
-
-
+ctx.dot(p1);
 
 ctx.log("-- Vector 1 -- ");
 var v1 = ctx.createVector(ctx.createPoint(2,1), ctx.createPoint(4,5));
@@ -37,9 +36,7 @@ ctx.log("end:"      + v1.end.str());
 ctx.log("lenght:"   + ctx.f2str(v1.lenght()));
 ctx.log("angle:"    + ctx.rad2str(v1.angle()));
 ctx.log("gradient:" + ctx.rad2str(v1.gradient()));
-ctx.ray(v1,"v1",null);
-
-
+ctx.ray(v1,"v1");
 
 ctx.log("-- Vector 2 -- ");
 var v2 = ctx.createVector(v1.end, ctx.createPoint(7,7));
@@ -48,25 +45,21 @@ ctx.log(v2.str());
 ctx.ray(v2,null,"red");
 
 
-
 ctx.log("-- Vector 3 -- ");
 var v3 = v1.add(v2);
 ctx.log(v3.str());
 ctx.ray(v3,"v3","green");
 
 
-
 ctx.log("-- Vector 4 -- ");
 var v4 = ctx.createVectorFromAngle(null, Math.PI/4, 10);
 ctx.log(v4.str());
 
-
-
+/*
 ctx.log("-- Arc 1 -- ");
 var a1 = ctx.createArc(ctx.createPoint(-5,-5),2);
 ctx.log(a1.str());
 ctx.arc(a1,"Circle", "yellow");
-
 
 
 ctx.log("-- Arc 2 -- ");
@@ -74,13 +67,11 @@ var a2 = ctx.createArc(ctx.createPoint(+5,-5),2,0, -Math.PI/4);
 ctx.log(a2.str());
 ctx.arc(a2, null, "cyan");
 
-
-
 ctx.log("-- Arc 3 -- ");
 var a2 = ctx.createArc(ctx.createPoint(+0,-2.5),3,Math.PI/4, 3*Math.PI/4);
 ctx.log(a2.str());
 ctx.arc(a2, null, "pink" , true);
-
+*/
 
 </script>
 

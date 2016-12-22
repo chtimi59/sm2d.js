@@ -1,15 +1,20 @@
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../src/sm2d.css">
-<script src="../src/sm2d.js"></script>
+<link rel="stylesheet" type="text/css" href="../dist/sm2d.css">
+<script src="../dist/sm2d.js"></script>
 </head>
-<body>
 
-<center><canvas id="myCanvas" width="1000" height="1000"></canvas></center>
-<textarea id="myLog" rows="6"></textarea>
+<body style="background-color: black; color: #CCC; margin:0px;">
+
+<center>
+<canvas class="sm2d" id="myCanvas" width="700" height="700"></canvas>
+</center>
+
+<textarea class="sm2d" id="myLog" rows="6"></textarea>
 
 <script>
-var ctx = new Sm2D("myCanvas","myLog");
+var ctx = new Sm2D("myCanvas");
+ctx.attachLog("myLog");
 ctx.log("hello world!");
 </script>
 

@@ -1,6 +1,8 @@
 # Cache
 .sass-cache
 
+.gen
+
 # Numerous always-ignore extensions
 *.diff
 *.err

@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": "AAAA,WAAY;EAAE,gBAAgB,EAAE,IAAI",
+"mappings": "AACA,yBAAyB;AACzB,WAAY;EACR,gBAAgB,EAAE,IAAI;;;AAG1B,cAAc;AACd,aAAc;EACV,QAAQ,EAAE,KAAK;EACf,MAAM,EAAE,CAAC;EACT,KAAK,EAAE,IAAI;EACX,MAAM,EAAC,CAAC;EACR,gBAAgB,EAAE,IAAI",
 "sources": ["../src/sm2d.css"],
 "names": [],
 "file": "sm2d.css"

@@ -14,20 +14,48 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
+// filename: @@__SOURCE_FILE__ 
+
 Description:
 
-	BoundingBox
+    BoundingBox
 
 */  
 
-/* constructor */
-Sm2D.BoundingBox = function() {
-	this.minx = null;
-	this.maxx = null;
-	this.miny = null;
-	this.maxy = null;
+/* -- Is it a valid BoundingBox ? -- */
+Sm2D.prototype.isBoundingBox = function(b) {     
+    return true;
 }
 
+/* -- Shortcut to object constructor -- */
+Sm2D.prototype.createBoundingBox = function(tag) {
+    var obj = new Sm2D.BoundingBox();
+    obj.tag = tag;    
+    return obj;
+}
+
+// ------
+
+/* Object Constructor */
+Sm2D.BoundingBox = function() {
+    this.minx = null;
+    this.maxx = null;
+    this.miny = null;
+    this.maxy = null;
+    this.tag = null;
+}
+
+/* Copy */
+Sm2D.BoundingBox.prototype.copy = function() {
+    var obj = new Sm2D.BoundingBox();
+    obj.minx = this.minx;
+    obj.maxx = this.maxx;
+    obj.miny = this.miny;
+    obj.maxy = this.maxy;
+    obj.tag  = this.tag;
+}
+
+/* Add Point in bounding box */
 Sm2D.BoundingBox.prototype.add  = function(point) { 
     this.minx = (this.minx==null)?point.x:Math.min(this.minx,point.x);
     this.maxx = (this.maxx==null)?point.x:Math.max(this.maxx,point.x);

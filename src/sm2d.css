@@ -1,1 +1,15 @@
-canvas.sm2d { background-color: #333; }
+
+/* Main Drawing Canvas */      
+canvas.sm2d {
+    background-color: #333;
+}
+
+/* Log aera */
+textarea.sm2d {
+    position: fixed;
+    bottom: 0;
+    width: 100%; 
+    margin:0;
+    background-color: #CC9;
+}
+    
