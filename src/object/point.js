@@ -24,17 +24,17 @@ Description:
  
 /* -- Is it a valid point ? -- */
 Sm2D.prototype.isValidPoint = function(obj) { 
-    if (obj===undefined   || obj===null) return false;
-    if (obj.x===undefined || obj===null) return false;
-    if (obj.y===undefined || obj===null) return false;
+    if (obj===undefined   || obj===null)      return false;
+    if (!Sm2D.prototype.isValidNumber(obj.x)) return false;
+    if (!Sm2D.prototype.isValidNumber(obj.y)) return false;
     return true;
 }
 
 /* -- Shortcut to object constructor -- */
 Sm2D.prototype.createPoint = function(x,y,tag) { 
+    if (!Sm2D.prototype.isValidNumber(x)) x = 0;
+    if (!Sm2D.prototype.isValidNumber(y)) y = 0;
     var obj = new Sm2D.Point();    
-    if (x===undefined || x===null) x = 0;
-    if (y===undefined || y===null) y = 0;
     obj.x = x;
     obj.y = y;
     obj.tag = tag;
@@ -52,11 +52,7 @@ Sm2D.Point = function() {
 
 /* Copy */
 Sm2D.Point.prototype.copy = function() {
-    var obj = new Sm2D.Point();
-    obj.x = this.x;
-    obj.y = this.y;
-    obj.tag = this.tag;
-    return obj;
+    return Sm2D.prototype.createPoint(this.x,this.y,this.tag);
 }
 
 /* Add a vector to a point (translation) */

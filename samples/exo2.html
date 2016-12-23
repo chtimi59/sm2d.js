@@ -26,7 +26,7 @@ ctx.log(ctx.f2str(v,2));
 ctx.log("-- Point 1 -- ");
 var p1 = ctx.createPoint(1,2);
 ctx.log(p1.str());
-ctx.dot(p1);
+ctx.drawPoint(p1);
 
 ctx.log("-- Vector 1 -- ");
 var v1 = ctx.createVector(ctx.createPoint(2,1), ctx.createPoint(4,5));
@@ -36,42 +36,37 @@ ctx.log("end:"      + v1.end.str());
 ctx.log("lenght:"   + ctx.f2str(v1.lenght()));
 ctx.log("angle:"    + ctx.rad2str(v1.angle()));
 ctx.log("gradient:" + ctx.rad2str(v1.gradient()));
-ctx.ray(v1,"v1");
+ctx.drawRay(v1,"v1");
 
 ctx.log("-- Vector 2 -- ");
 var v2 = ctx.createVector(v1.end, ctx.createPoint(7,7));
 //var v2 = ctx.createVector(null, ctx.createPoint(3,2)); // get same result without origin
 ctx.log(v2.str());
-ctx.ray(v2,null,"red");
-
+ctx.drawRay(v2,null,"red");
 
 ctx.log("-- Vector 3 -- ");
 var v3 = v1.add(v2);
 ctx.log(v3.str());
-ctx.ray(v3,"v3","green");
-
+ctx.drawRay(v3,"v3","green");
 
 ctx.log("-- Vector 4 -- ");
 var v4 = ctx.createVectorFromAngle(null, Math.PI/4, 10);
 ctx.log(v4.str());
 
-/*
 ctx.log("-- Arc 1 -- ");
 var a1 = ctx.createArc(ctx.createPoint(-5,-5),2);
 ctx.log(a1.str());
-ctx.arc(a1,"Circle", "yellow");
-
+ctx.drawArc(a1,"Circle", "yellow");
 
 ctx.log("-- Arc 2 -- ");
 var a2 = ctx.createArc(ctx.createPoint(+5,-5),2,0, -Math.PI/4);
 ctx.log(a2.str());
-ctx.arc(a2, null, "cyan");
+ctx.drawArc(a2, null, "cyan");
 
 ctx.log("-- Arc 3 -- ");
 var a2 = ctx.createArc(ctx.createPoint(+0,-2.5),3,Math.PI/4, 3*Math.PI/4);
 ctx.log(a2.str());
-ctx.arc(a2, null, "pink" , true);
-*/
+ctx.drawArc(a2, null, "pink" , true);
 
 </script>
 

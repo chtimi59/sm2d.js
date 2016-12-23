@@ -20,9 +20,9 @@ Description:
 
     Draw a dot
 
-*/ 
+*/  
  
-Sm2D.prototype.dot = function(pt, name, color, details)
+Sm2D.prototype.drawPoint = function(pt, name, color, details)
 {
     if (!this.isValidPoint(pt)) console.error("invalid point");    
     if (name===undefined     || name===null)    name="("+Sm2D.prototype.f2str(pt.x)+", "+Sm2D.prototype.f2str(pt.y)+")";
@@ -32,8 +32,8 @@ Sm2D.prototype.dot = function(pt, name, color, details)
 	this.containBox.add(pt);
 
     this.d.beginPath();
-    this.line(this.createPoint(pt.x-this.width()/100,pt.y),  this.createPoint(pt.x+this.width()/100,pt.y));
-    this.line(this.createPoint(pt.x, pt.y-this.height()/100), this.createPoint(pt.x, pt.y+this.height()/100));
+    this.drawLine(this.createPoint(pt.x-this.width()/100,pt.y),   this.createPoint(pt.x+this.width()/100,pt.y));
+    this.drawLine(this.createPoint(pt.x, pt.y-this.height()/100), this.createPoint(pt.x, pt.y+this.height()/100));
     this.d.lineWidth = 1;
     this.d.strokeStyle = color;
     this.d.stroke();

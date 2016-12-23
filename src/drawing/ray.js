@@ -22,7 +22,7 @@ Description:
 
 */ 
  
-Sm2D.prototype.ray = function(vector, name,color,details)
+Sm2D.prototype.drawRay = function(vector, name, color, details)
 {
     if (!this.isValidVector(vector)) console.error("invalid vector");    
 	if (name===undefined     || name===null)    name="("+Sm2D.prototype.f2str(vector.dx())+", "+Sm2D.prototype.f2str(vector.dy())+")";
@@ -40,16 +40,16 @@ Sm2D.prototype.ray = function(vector, name,color,details)
         
     this.d.beginPath();
     this.d.lineWidth = 0.5;
-    this.line(p1,p2);
+    this.drawLine(p1,p2);
     this.d.strokeStyle = color;
     this.d.stroke();
 
     this.d.beginPath();
     this.d.lineWidth = 0.5;    
     this.moveTo(p3);
-    this.lineTo(p4);
-    this.lineTo(p2);
-    this.lineTo(p3);    
+    this.drawLineTo(p4);
+    this.drawLineTo(p2);
+    this.drawLineTo(p3);    
     this.d.fillStyle = color;
     this.d.fill();
     this.d.stroke();
@@ -59,6 +59,6 @@ Sm2D.prototype.ray = function(vector, name,color,details)
 	var pt2 = this.word2canvas(p5);
 	this.d.fillText(name,pt2.x+7,pt2.y-7); 
 	if (details) {
-		this.dot(p1," ",color); 
+		this.drawPoint(p1," ",color); 
 	}
 }

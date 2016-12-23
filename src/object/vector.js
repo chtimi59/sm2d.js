@@ -24,32 +24,35 @@ Description:
 /* -- Is it a valid Vector ? -- */
 Sm2D.prototype.isValidVector = function(obj) { 
     if (obj===undefined || obj===null)  return false;
-    if (!Sm2D.prototype.isValidPoint(obj.start))  return false;
-    if (!Sm2D.prototype.isValidPoint(obj.end))  return false;
+    if (!Sm2D.prototype.isValidPoint(obj.start)) return false;
+    if (!Sm2D.prototype.isValidPoint(obj.end))   return false;
     return true;
 }
 
 /* -- Shortcut to object constructor -- */
 Sm2D.prototype.createVector = function(start, end, tag) {
-	var obj = new Sm2D.Vector();
 	if (!Sm2D.prototype.isValidPoint(start)) start = Sm2D.prototype.POINTZERO;
 	if (!Sm2D.prototype.isValidPoint(end))   end = start;
+    var obj = new Sm2D.Vector();
 	obj.start = start.copy(); 
 	obj.end = end.copy(); 
 	obj.tag = tag;
 	return obj;
 }
+
+/* -- Shortcut to object constructor -- */
 Sm2D.prototype.createVectorFromDelta = function(start, dx, dy, tag) {
 	var obj = new Sm2D.Vector();
 	if (!Sm2D.prototype.isValidPoint(start)) start = Sm2D.prototype.POINTZERO;
-	if (dx===undefined     || dx===null) dx = 0;
-	if (dy===undefined     || dy===null) dy = 0;
+	if (!Sm2D.prototype.isValidNumber(dx))   dx = 0;
+	if (!Sm2D.prototype.isValidNumber(dx))   dy = 0;
 	obj.start = start.copy(); 
 	obj.end = Sm2D.prototype.createPoint(start.x + dx, start.y + dy);
 	obj.tag = tag;
 	return obj;
 }
 
+/* -- Shortcut to object constructor -- */
 Sm2D.prototype.createVectorFromAngle = function(start, angle, lenght, tag) {
 	return Sm2D.prototype.createVectorFromDelta(start, lenght*Math.cos(angle), lenght*Math.sin(angle), tag);
 }
@@ -63,13 +66,12 @@ Sm2D.Vector = function() {
     this.tag       = null;    
 }
 
-
 /* Copy */
 Sm2D.Vector.prototype.copy = function() {
     return Sm2D.prototype.createVector(this.start,this.dx,this.dy,this.tag);
 } 
 
-/* various vectors properties */
+/* Various properties */
 Sm2D.Vector.prototype.dx        = function() { return this.end.x-this.start.x }
 Sm2D.Vector.prototype.dy        = function() { return this.end.y-this.start.y }
 Sm2D.Vector.prototype.lenght    = function() { return Math.sqrt(this.dx()*this.dx() + this.dy()*this.dy()); }
@@ -104,7 +106,6 @@ Sm2D.Vector.prototype.str  = function(digit) {
     return str;
 }
     
-
 /* DEFAULT */
 Sm2D.prototype.UZERO = new Sm2D.prototype.createVectorFromDelta(null,1,0);
 Sm2D.prototype.VZERO = new Sm2D.prototype.createVectorFromDelta(null,0,1);

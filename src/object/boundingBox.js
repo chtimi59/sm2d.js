@@ -23,7 +23,8 @@ Description:
 */  
 
 /* -- Is it a valid BoundingBox ? -- */
-Sm2D.prototype.isBoundingBox = function(b) {     
+Sm2D.prototype.isValidBoundingBox = function(b) { 
+    if (obj===undefined   || obj===null) return false;   
     return true;
 }
 

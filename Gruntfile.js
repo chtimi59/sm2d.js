@@ -1,12 +1,28 @@
 module.exports = function(grunt)
 {
-                 
+    var sources = [
+        'main.js',
+        'object/*.js',
+        'drawing/*.js',                        
+        'ui/*.js',
+    ];
+
+    console.log("js sources:");
+    console.log(sources);
+    console.log("");
+    
+    var js_src_path = [];
+    sources.forEach(function(e) { js_src_path.push('src/' + e) });
+
+    var js_conactsrc_path = [];
+    sources.forEach(function(e) { js_conactsrc_path.push('.gen/src/' + e) });   
+    
     grunt.loadNpmTasks('grunt-contrib-sass'); 
     grunt.loadNpmTasks('grunt-concat-sourcemap');
     grunt.loadNpmTasks('grunt-contrib-uglify'); 
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-replace');
-  
+
     // Configuration de Grunt    
     grunt.initConfig(
     {
@@ -58,11 +74,7 @@ module.exports = function(grunt)
             },
             compile: {
                 files: {
-                    'dist/<%= pkg.name %>.js': [
-                        '.gen/src/main.js',
-                        '.gen/src/object/*.js',
-                        '.gen/src/drawing/*.js',                        
-                    ]
+                    'dist/<%= pkg.name %>.js': js_conactsrc_path
                 }
             }
         },
@@ -80,11 +92,7 @@ module.exports = function(grunt)
               preserveComments: /^!|@preserve|@license|@cc_on/i
             },
             compile: {
-              src:  [
-                        'src/main.js',
-                        'src/object/*.js',
-                        'src/drawing/*.js',                   
-              ],
+              src:  js_src_path,
               dest: 'dist/<%= pkg.name %>.min.js'
             }
         },
