@@ -1,0 +1,113 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../dist/sm2d.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<script src="../dist/sm2d.js"></script>
+</head>
+
+<body style="background-color: black; color: #CCC; margin:0px;" oncontextmenu="return false">
+
+<div class="sm2d controlpanel" id="myControl" style="top: 50px; left: 20px;">
+  <ul>
+  <li>weight P1:
+      <select id="w1" value=1>
+        <option selected="selected">1</option>
+        <option>2</option>
+        <option>10</option>
+        <option>100</option>
+        <option>1000</option>
+      </select>
+  </li>
+  
+  <li>weight P2:
+      <select id="w2" value="1">
+        <option>0</option>
+        <option selected="selected">1</option>
+        <option>2</option>
+        <option>10</option>
+        <option>100</option>
+        <option>1000</option>
+      </select>
+  </li>
+  
+  <li>weight P3:
+      <select id="w3" value="1">
+<option>0</option>
+        <option selected="selected">1</option>
+        <option>2</option>
+        <option>10</option>
+        <option>100</option>
+        <option>1000</option>
+      </select>
+  </li>
+  
+  <li>weight P4:
+      <select id="w4">
+        <option selected="selected">1</option>
+        <option>2</option>
+        <option>10</option>
+        <option>100</option>
+        <option>1000</option>
+      </select>
+  </li>
+  
+  </ul>
+  <input value="Clear" type="button" onclick="onClear();" />
+  <input value="Draw" type="button" onclick="onClick();" />
+</div>
+
+
+<center><canvas class="sm2d" id="myCanvas" width="1000" height="1000"></canvas></center>
+
+<textarea class="sm2d" id="myLog" rows="6"></textarea>
+
+<script>
+var ctx = new Sm2D("myCanvas",-10,10,-10,10);
+ctx.attachLog("myLog");
+ctx.addControlPanel("myControl");
+
+var controlPoints = [
+    ctx.createPoint(-8,-5),
+    ctx.createPoint(-8,+5),
+    ctx.createPoint(+5,0),
+    ctx.createPoint(+7,-5)
+]
+draw();
+
+function onClear() {
+  ctx.clear();
+  ctx.clearLog();
+}
+
+function onClick() {	
+    draw();	
+}
+
+ctx.mouseMoveListener = function(pt,evt) {
+	 if (evt.buttons == 1) {
+        controlPoints[1] = pt;
+        ctx.clear();
+        draw();
+    }
+    if (evt.buttons == 2) {
+        controlPoints[2] = pt;
+        ctx.clear();
+        draw();
+    }
+}
+
+function draw() {
+    var weights = [
+        Number(document.getElementById("w1").value),
+        Number(document.getElementById("w2").value),
+        Number(document.getElementById("w3").value),
+        Number(document.getElementById("w4").value),        
+    ];
+    var nurbs = ctx.createNURBS(controlPoints, weights);
+    ctx.drawNURBS(nurbs,null,'Yellow');
+}
+
+</script>
+
+</body>
+</html>

@@ -378,6 +378,60 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
+// filename: src/object/nurbs.js 
+
+Description:
+
+    nurbs
+
+*/ 
+ 
+/* -- Is it a valid point ? -- */
+Sm2D.prototype.isValidNURBS = function(obj) { 
+    if (obj===undefined   || obj===null)      return false;
+    return true;
+}
+
+/* -- Shortcut to object constructor -- */
+Sm2D.prototype.createNURBS = function(controlsPoint,weight,tag) { 
+    var obj = new Sm2D.NURBS();    
+    obj.p = controlsPoint;
+    obj.w = weight;
+    obj.tag = tag;
+    return obj;
+}
+
+// ------
+   
+/* Object Constructor */
+Sm2D.NURBS = function() { 
+    this.p = null;
+    this.w = null;
+    this.tag = null;
+};
+
+/* Copy */
+Sm2D.NURBS.prototype.copy = function() {
+    return Sm2D.prototype.createPoint(this.p,this.w,this.tag);
+}
+
+
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
 // filename: src/object/point - Copy.js 
 
 Description:
@@ -1010,6 +1064,125 @@ Sm2D.prototype.drawLine   = function(pt1,pt2) {
     if (!this.isValidPoint(pt2)) console.error("invalid point pt2");
     this.moveTo(pt1);
     this.drawLineTo(pt2);
+}
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+// filename: src/drawing/nurbs.js 
+
+Description:
+
+    Draw a nurbs
+
+*/  
+ 
+Sm2D.prototype.drawNURBS = function(nurbs, name, color, details)
+{
+    if (!this.isValidNURBS(nurbs)) console.error("invalid nurbs");    
+    if (name===undefined     || name===null)    name="";
+    if (color===undefined    || color===null)   color='#CCC';
+    if (details===undefined  || details===null) details=false;
+    
+    this.d.beginPath();
+    this.d.lineWidth = 0.5;
+    this.d.strokeStyle = color;
+    for(t=0;t<1;t=t+0.001) {
+        var x=0;
+        var y=0;
+        var w=0;
+        for(i=0;i<4;i++) {
+            var Bernstein = 0;
+            switch(i) {
+                case 0: Bernstein += 1*Math.pow(t,0)*Math.pow(1-t,3); break;
+                case 1: Bernstein += 3*Math.pow(t,1)*Math.pow(1-t,2); break;
+                case 2: Bernstein += 3*Math.pow(t,2)*Math.pow(1-t,1); break;
+                case 3: Bernstein += 1*Math.pow(t,3)*Math.pow(1-t,0); break;
+            }
+            x += Bernstein * nurbs.w[i] * nurbs.p[i].x;
+            y += Bernstein * nurbs.w[i] * nurbs.p[i].y;
+            w += Bernstein * nurbs.w[i];
+        }
+        var p = this.createPoint(x/w,y/w);
+        this.drawLineTo(p);
+    }
+    this.d.stroke();
+    
+    this.d.beginPath();
+    this.d.lineWidth = 0.25;
+    this.d.strokeStyle = '#CCC';
+    this.d.setLineDash([5, 3]);
+    for(i=1;i<4;i++) this.drawLine(nurbs.p[i-1], nurbs.p[i]);
+    this.d.stroke();
+    this.d.setLineDash([]);    
+    
+    for(i=0;i<4;i++) this.drawPoint(nurbs.p[i],"P"+i+"("+nurbs.w[i]+")");
+}
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+// filename: src/drawing/point - Copy.js 
+
+Description:
+
+    Draw a dot
+
+*/  
+ 
+Sm2D.prototype.drawPoint = function(pt, name, color, details)
+{
+    if (!this.isValidPoint(pt)) console.error("invalid point");    
+    if (name===undefined     || name===null)    name="("+Sm2D.prototype.f2str(pt.x)+", "+Sm2D.prototype.f2str(pt.y)+")";
+    if (color===undefined    || color===null)   color='#CCC';
+    if (details===undefined  || details===null) details=false;
+
+	this.containBox.add(pt);
+
+    this.d.beginPath();
+    this.drawLine(this.createPoint(pt.x-this.width()/100,pt.y),   this.createPoint(pt.x+this.width()/100,pt.y));
+    this.drawLine(this.createPoint(pt.x, pt.y-this.height()/100), this.createPoint(pt.x, pt.y+this.height()/100));
+    this.d.lineWidth = 1;
+    this.d.strokeStyle = color;
+    this.d.stroke();
+   
+    var pt2 = this.word2canvas(pt);
+
+    if (details) {
+	    this.d.beginPath();
+		this.d.arc(pt2.x,pt2.y, 2, 0, 2*Math.PI);
+		this.d.fillStyle = color;
+		this.d.fill();
+		this.d.stroke(); 
+	}
+
+    this.d.fillStyle = color;
+    this.d.font = "12px Arial";
+    this.d.fillText(name,pt2.x+7,pt2.y-7);
 }
 /** 
     Copyright 2016 Jan d'Orgeville

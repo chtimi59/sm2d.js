@@ -22,7 +22,6 @@ var stopAngle  = -Math.PI/2;
 draw();
 
 ctx1.mouseMoveListener = function(pt,evt) {
-    var v1 = ctx1.createVector(ctx1.POINTZERO, pt)
     if (evt.buttons == 1) {
         startAngle = v1.angle();
         lenght = v1.lenght();
