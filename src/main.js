@@ -50,7 +50,7 @@ function Sm2D(canvasId, minx, maxx, miny, maxy)
 	    if(e.preventDefault) e.preventDefault();
 	    e.cancelBubble=true;
 	    e.returnValue=false;
-    	ctx.mouseMoveListener(ctx.canvas2word(x,y),e);
+    	ctx.mouseMoveListener(ctx.canvas2word(ctx.createPoint(x,y)),e);
     	return false;      
 	}, false);
     
@@ -64,7 +64,7 @@ function Sm2D(canvasId, minx, maxx, miny, maxy)
 	    if(e.preventDefault) e.preventDefault();
 	    e.cancelBubble=true;
 	    e.returnValue=false;
-    	ctx.mouseClickListener(ctx.canvas2word(x,y),e);  
+    	ctx.mouseClickListener(ctx.canvas2word(ctx.createPoint(x,y)),e);  
     	return false;     	
 	}, false);
     
