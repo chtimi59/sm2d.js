@@ -32,7 +32,7 @@ Sm2D.prototype.drawArc = function(arc, name, color, details)
 	var pc = arc.center;
 	var p1 = arc.start();
 	var p2 = arc.end();
-
+    
 	this.containBox.add(p1);
 	this.containBox.add(p2);
 
@@ -53,6 +53,7 @@ Sm2D.prototype.drawArc = function(arc, name, color, details)
 	var a2 = arc.stopAngle % (2*Math.PI);
 	if (a1<0)  a1 += (2*Math.PI);
 	if (a2<=0) a2 += (2*Math.PI);
+    if (a2<a1) a2 += (2*Math.PI);
 	var first = false;
 	for (t=a1; t<a2; t=t+0.001) {
 		var v = this.createVectorFromAngle(arc.center, t, arc.radius);
@@ -60,7 +61,7 @@ Sm2D.prototype.drawArc = function(arc, name, color, details)
 			this.moveTo(v.start);			
 			first = false;
 		} else {
-			ctx.drawLineTo(v.end);
+			this.drawLineTo(v.end);
 		}
 	}
 	this.d.stroke();	

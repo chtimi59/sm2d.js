@@ -40,6 +40,7 @@ function Sm2D(canvasId, minx, maxx, miny, maxy)
 	this.mouseMoveListener = null;
 	this.mouseClickListener = null;
     
+
 	this.canvas.addEventListener('mousemove', function (e) { 
 		if (!ctx.mouseMoveListener) return;
 		var rect = this.getBoundingClientRect();
@@ -74,6 +75,7 @@ function Sm2D(canvasId, minx, maxx, miny, maxy)
     this.MINY = (!this.isValidNumber(miny))?-10:miny;    
     this.MAXY = (!this.isValidNumber(maxy))?+10:maxy;    
     this.clear(minx, maxx, miny, maxy);
+    this.clearLog();
 }
 
   
@@ -91,7 +93,6 @@ Sm2D.prototype.clear = function (minx, maxx, miny, maxy)
     this.containBox = new this.createBoundingBox();
     this.drawXaxis(0); this.drawYaxis(0);    
     this.drawXmark(1); this.drawYmark(1);
-    this.clearLog();
 }
 
 Sm2D.prototype.width  = function () { return this.MAXX-this.MINX; }
@@ -377,6 +378,84 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
+// filename: src/object/point - Copy.js 
+
+Description:
+
+    2D point
+
+*/ 
+ 
+/* -- Is it a valid point ? -- */
+Sm2D.prototype.isValidPoint = function(obj) { 
+    if (obj===undefined   || obj===null)      return false;
+    if (!Sm2D.prototype.isValidNumber(obj.x)) return false;
+    if (!Sm2D.prototype.isValidNumber(obj.y)) return false;
+    return true;
+}
+
+/* -- Shortcut to object constructor -- */
+Sm2D.prototype.createPoint = function(x,y,tag) { 
+    if (!Sm2D.prototype.isValidNumber(x)) x = 0;
+    if (!Sm2D.prototype.isValidNumber(y)) y = 0;
+    var obj = new Sm2D.Point();    
+    obj.x = x;
+    obj.y = y;
+    obj.tag = tag;
+    return obj;
+}
+
+// ------
+   
+/* Object Constructor */
+Sm2D.Point = function() { 
+    this.x = null;
+    this.y = null;
+    this.tag = null;
+};
+
+/* Copy */
+Sm2D.Point.prototype.copy = function() {
+    return Sm2D.prototype.createPoint(this.x,this.y,this.tag);
+}
+
+/* Add a vector to a point (translation) */
+Sm2D.Point.prototype.add = function(vector) {
+   if (!Sm2D.prototype.isValidVector(vector)) console.error("invalid vector");
+   return Sm2D.prototype.createPoint(this.x+vector.dx(), this.y+vector.dy());
+}
+
+/* To String */
+Sm2D.Point.prototype.str = function(digit) {
+    var s = "";
+    if (this.tag!=null) s+="[" + obj.tag + "] "
+    s += "(" + Sm2D.prototype.f2str(this.x,digit) + ", "+Sm2D.prototype.f2str(this.y,digit)+")";
+    return s;
+}
+
+/* DEFAULT */
+Sm2D.prototype.POINTZERO = new Sm2D.prototype.createPoint(0,0);
+
+
+
+    
+
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
 // filename: src/object/point.js 
 
 Description:
@@ -455,6 +534,118 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
+// filename: src/object/spiral.js 
+
+Description:
+
+    Spiral
+
+*/ 
+ 
+/* -- Is it a valid Spiral ? -- */
+Sm2D.prototype.isValidSpiral = function(obj) { 
+    if (obj===undefined   || obj===null)                return false;
+    if (!Sm2D.prototype.isValidVector(obj.entryVector)) return false;
+    if (!Sm2D.prototype.isValidNumber(obj.A))           return false;
+    if (!Sm2D.prototype.isValidNumber(obj.L1))          return false;
+    if (!Sm2D.prototype.isValidNumber(obj.L2))          return false;
+    if (obj.isCCW===undefined || obj.isCCW===null)      return false;
+    return true;
+}
+
+/* -- Shortcut to object constructor -- */
+Sm2D.prototype.createSpiral = function(A, L1, L2, isCCW, entryVector, tag) { 
+    if (!Sm2D.prototype.isValidVector(entryVector)) entryVector = Sm2D.prototype.UZERO;
+    if (!Sm2D.prototype.isValidNumber(A))  A = 5;
+    if (!Sm2D.prototype.isValidNumber(L1)) L1 = 5;
+    if (!Sm2D.prototype.isValidNumber(L2)) L2 = 10;
+    if (isCCW===undefined || isCCW===null) isCCW = true;
+    
+    entryVector.normalize();
+    
+    var obj = new Sm2D.Spiral();    
+    obj.entryVector = entryVector.copy(); 
+    obj.A = A;
+    obj.L1 = L1;
+    obj.L2 = L2;
+    obj.isCCW = isCCW;
+    obj.tag = tag;
+    return obj;
+}
+
+/* -- Shortcut to object constructor -- */
+Sm2D.prototype.createSpiralFromRadius = function(lenght, startRadius, isCCW, isEntry, A, entryVector) {
+    var startL;
+    if (isEntry) {
+      startL = 0;
+      if (startRadius!=null) startL = A*A / startRadius;
+    } else {
+      startL = -lenght;
+      if (startRadius!=null) startL = -A*A / startRadius;
+      isCCW = !isCCW;
+    }    
+    stopL  = startL+lenght;
+    return Sm2D.prototype.createSpiral(A, startL, stopL, isCCW, entryVector);
+}
+
+
+// ------
+   
+/* Object Constructor */
+Sm2D.Spiral = function() { 
+    this.entryVector = null;
+    this.A     = null;
+    this.L1    = null;
+    this.L2    = null;
+    this.isCCW = null;
+    this.tag   = null;
+};
+
+/* Copy */
+Sm2D.Spiral.prototype.copy = function() {
+    return Sm2D.prototype.createSpiral(this.entryVector,this.A,this.L1,this.L2,this.isCCW,this.tag);
+}
+
+/* Various properties */
+Sm2D.Spiral.prototype.a  = function() { return this.A*Math.sqrt(2); }
+Sm2D.Spiral.prototype.l1 = function() { return this.L1/this.a(); }
+Sm2D.Spiral.prototype.l2 = function() { return this.L2/this.a(); }
+Sm2D.Spiral.prototype.angleIn   = function() { return this.entryVector.angle() + (this.L1*this.L1)/(this.a()*this.a()); }
+Sm2D.Spiral.prototype.radiusIn  = function() { return (this.L1!=0)?this.A*this.A/this.L1:Infinity; }
+Sm2D.Spiral.prototype.angleOut  = function() { return this.entryVector.angle() + (this.L2*this.L2)/(this.a()*this.a()); }
+Sm2D.Spiral.prototype.radiusOut = function() { return (this.L2!=0)?this.A*this.A/this.L2:Infinity; }
+  
+
+/* To String */
+Sm2D.Spiral.prototype.str = function(digit) {
+    var s = "";  
+    s += "Radius(" + Sm2D.prototype.f2str(this.radiusIn(),digit) + " -> " + Sm2D.prototype.f2str(this.radiusOut(),digit) + "), ";
+    s += "Angle(" + Sm2D.prototype.rad2str(this.angleIn(),digit) + " -> " + Sm2D.prototype.rad2str(this.angleOut(),digit) + ")";
+    return s;
+}
+
+
+
+
+
+    
+
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
 // filename: src/object/transform.js 
 
 Description:
@@ -482,7 +673,7 @@ Sm2D.prototype.localCCS2world = function(vector, localPt) {
 	var o = vector.start;
 	var i = vector;
 	var j = vector.rotate(Math.PI/2);
-	return local2world(o,i,j,localPt);
+	return this.local2world(o,i,j,localPt);
 }
 
 
@@ -511,7 +702,7 @@ Sm2D.prototype.world2localCCS = function(vector, worldPt) {
 	var o = vector.start;
 	var i = vector;
 	var j = vector.rotate(Math.PI/2);
-	return world2local(o,i,j,worldPt);
+	return this.world2local(o,i,j,worldPt);
 }
 /** 
     Copyright 2016 Jan d'Orgeville
@@ -583,7 +774,7 @@ Sm2D.Vector = function() {
 
 /* Copy */
 Sm2D.Vector.prototype.copy = function() {
-    return Sm2D.prototype.createVector(this.start,this.dx,this.dy,this.tag);
+    return Sm2D.prototype.createVector(this.start,this.end,this.tag);
 } 
 
 /* Various properties */
@@ -611,6 +802,19 @@ Sm2D.Vector.prototype.mult = function(factor) {
     return Sm2D.prototype.createVector(this.start, v2);
 }
 
+/* Vector Normalize */
+Sm2D.Vector.prototype.normalize = function() {
+    var l = this.lenght();
+    if (l==0) console.error("Could not normalize null vector");
+    this.end = Sm2D.prototype.createPoint(this.start.x+this.dx()/l, this.start.y+this.dy()/l);
+}
+
+/* Vector change Lenght */
+Sm2D.Vector.prototype.setLenght = function(lenght) {
+    this.normalize();
+    this.end = Sm2D.prototype.createPoint(this.start.x+this.dx()*lenght, this.start.y+this.dy()*lenght);
+}
+
 /* To String */
 Sm2D.Vector.prototype.str  = function(digit) {
     str = "";
@@ -624,6 +828,7 @@ Sm2D.Vector.prototype.str  = function(digit) {
 /* DEFAULT */
 Sm2D.prototype.UZERO = new Sm2D.prototype.createVectorFromDelta(null,1,0);
 Sm2D.prototype.VZERO = new Sm2D.prototype.createVectorFromDelta(null,0,1);
+
 /** 
     Copyright 2016 Jan d'Orgeville
 
@@ -658,7 +863,7 @@ Sm2D.prototype.drawArc = function(arc, name, color, details)
 	var pc = arc.center;
 	var p1 = arc.start();
 	var p2 = arc.end();
-
+    
 	this.containBox.add(p1);
 	this.containBox.add(p2);
 
@@ -679,6 +884,7 @@ Sm2D.prototype.drawArc = function(arc, name, color, details)
 	var a2 = arc.stopAngle % (2*Math.PI);
 	if (a1<0)  a1 += (2*Math.PI);
 	if (a2<=0) a2 += (2*Math.PI);
+    if (a2<a1) a2 += (2*Math.PI);
 	var first = false;
 	for (t=a1; t<a2; t=t+0.001) {
 		var v = this.createVectorFromAngle(arc.center, t, arc.radius);
@@ -686,7 +892,7 @@ Sm2D.prototype.drawArc = function(arc, name, color, details)
 			this.moveTo(v.start);			
 			first = false;
 		} else {
-			ctx.drawLineTo(v.end);
+			this.drawLineTo(v.end);
 		}
 	}
 	this.d.stroke();	
@@ -875,6 +1081,70 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 
+// filename: src/drawing/ray - Copy.js 
+
+Description:
+
+    Draw a ray
+
+*/ 
+ 
+Sm2D.prototype.drawRay = function(vector, name, color, details)
+{
+    if (!this.isValidVector(vector)) console.error("invalid vector");    
+	if (name===undefined     || name===null)    name="("+Sm2D.prototype.f2str(vector.dx())+", "+Sm2D.prototype.f2str(vector.dy())+")";
+    if (color===undefined    || color===null)   color='#CCC';
+	if (details===undefined  || details===null) details=false;
+
+    var p1 = vector.start;
+    var p2 = vector.end;
+    var p3 = this.createVectorFromAngle(p2,vector.angle()+9*Math.PI/10, this.width()/50).end;
+    var p4 = this.createVectorFromAngle(p2,vector.angle()-9*Math.PI/10, this.width()/50).end;
+    var p5 = vector.middle();
+
+	this.containBox.add(p1);
+	this.containBox.add(p2);
+        
+    this.d.beginPath();
+    this.d.lineWidth = 0.5;
+    this.drawLine(p1,p2);
+    this.d.strokeStyle = color;
+    this.d.stroke();
+
+    this.d.beginPath();
+    this.d.lineWidth = 0.5;    
+    this.moveTo(p3);
+    this.drawLineTo(p4);
+    this.drawLineTo(p2);
+    this.drawLineTo(p3);    
+    this.d.fillStyle = color;
+    this.d.fill();
+    this.d.stroke();
+    this.d.fillStyle = color;
+    this.d.font = "12px Arial";
+    
+	var pt2 = this.word2canvas(p5);
+	this.d.fillText(name,pt2.x+7,pt2.y-7); 
+	if (details) {
+		this.drawPoint(p1," ",color); 
+	}
+}
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
 // filename: src/drawing/ray.js 
 
 Description:
@@ -923,6 +1193,112 @@ Sm2D.prototype.drawRay = function(vector, name, color, details)
 		this.drawPoint(p1," ",color); 
 	}
 }
+/** 
+    Copyright 2016 Jan d'Orgeville
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+// filename: src/drawing/spiral.js 
+
+Description:
+
+    Draw a spiral
+
+*/ 
+ 
+Sm2D.prototype.drawSpiral = function(spiral, name, color, details)
+{    
+    if (!this.isValidSpiral(spiral)) console.error("invalid spiral");    
+    if (name===undefined    || name===null)    name="";
+    if (color===undefined   || color===null)   color='#CCC';
+    if (details===undefined || details===null) details=false;
+    
+    // for test and UI
+    var testLenght = 0;
+    var firstDelta = null;
+    var lastDelta = null;
+    
+    this.d.beginPath();
+    this.d.lineWidth = 3;
+    this.d.strokeStyle = color;
+
+    var a = spiral.a();
+    var l1 = spiral.l1();
+    var l2 = spiral.l2();
+        
+    var dS = this.createVectorFromDelta(Sm2D.prototype.POINTZERO,0,0);
+    var ds = Math.abs(l2-l1)/10000; // 10000 steps
+    var dx, dy;
+    var s=l1;
+    var signe = ((spiral.isCCW)?1:-1);
+    while (s<l2)
+    { 
+       dx = a * Math.cos(s*s) * ds;
+       dy = signe * a * Math.sin(s*s) * ds;
+       dS = this.createVectorFromDelta(dS.end, dx, dy);
+
+       s += ds;       
+
+       // for test and UI
+       testLenght += dS.lenght();
+       if (!firstDelta) firstDelta = dS.copy();
+       lastDelta= dS.copy();
+              
+       var worldPt = this.localCCS2world(spiral.entryVector, dS.end);       
+	     this.drawLineTo(worldPt);
+    }
+    this.d.stroke();
+    
+    if (details)
+    {                
+        var inRadius     = spiral.radiusIn();
+        var inStrRadius  = this.f2str(inRadius);
+        var outRadius    = spiral.radiusOut();
+        var outStrRadius = this.f2str(outRadius);        
+        var inAngle  = spiral.angleIn();
+        var outAngle = spiral.angleOut();
+
+        var firstDeltaWorld = ctx.createVector(
+            this.localCCS2world(spiral.entryVector, firstDelta.start),       
+            this.localCCS2world(spiral.entryVector, firstDelta.end)
+        );
+        
+        var lastDeltaWorld = ctx.createVector(
+            this.localCCS2world(spiral.entryVector, lastDelta.start),       
+            this.localCCS2world(spiral.entryVector, lastDelta.end)
+        );
+        
+        firstDeltaWorld.setLenght(3);
+        this.drawRay(firstDeltaWorld, "input (R="+inStrRadius+")", "#F88", true);
+
+        lastDeltaWorld.setLenght(3);
+        this.drawRay(lastDeltaWorld, "output (R="+outStrRadius+")", "#88E", true);
+    
+        if (inRadius!=Infinity) { 
+            firstDeltaWorld.setLenght(Math.abs(inRadius));  
+            firstDeltaWorld = firstDeltaWorld.rotate(((inRadius<0)?-1:1) * signe * Math.PI/2);      
+            this.drawArc(this.createArc(firstDeltaWorld.end, firstDeltaWorld.lenght()),null,"#755");
+        };
+        
+        if (outRadius!=Infinity) { 
+            lastDeltaWorld.setLenght(Math.abs(outRadius));  
+            lastDeltaWorld = lastDeltaWorld.rotate(((outRadius<0)?-1:1) * signe * Math.PI/2);
+            this.drawArc(this.createArc(lastDeltaWorld.end, lastDeltaWorld.lenght()),null,"#557");
+        };
+    }    
+}
+
 /** 
     Copyright 2016 Jan d'Orgeville
 

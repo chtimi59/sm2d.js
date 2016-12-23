@@ -40,6 +40,7 @@ function Sm2D(canvasId, minx, maxx, miny, maxy)
 	this.mouseMoveListener = null;
 	this.mouseClickListener = null;
     
+
 	this.canvas.addEventListener('mousemove', function (e) { 
 		if (!ctx.mouseMoveListener) return;
 		var rect = this.getBoundingClientRect();
@@ -74,6 +75,7 @@ function Sm2D(canvasId, minx, maxx, miny, maxy)
     this.MINY = (!this.isValidNumber(miny))?-10:miny;    
     this.MAXY = (!this.isValidNumber(maxy))?+10:maxy;    
     this.clear(minx, maxx, miny, maxy);
+    this.clearLog();
 }
 
   
@@ -91,7 +93,6 @@ Sm2D.prototype.clear = function (minx, maxx, miny, maxy)
     this.containBox = new this.createBoundingBox();
     this.drawXaxis(0); this.drawYaxis(0);    
     this.drawXmark(1); this.drawYmark(1);
-    this.clearLog();
 }
 
 Sm2D.prototype.width  = function () { return this.MAXX-this.MINX; }

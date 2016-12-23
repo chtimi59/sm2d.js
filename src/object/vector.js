@@ -68,7 +68,7 @@ Sm2D.Vector = function() {
 
 /* Copy */
 Sm2D.Vector.prototype.copy = function() {
-    return Sm2D.prototype.createVector(this.start,this.dx,this.dy,this.tag);
+    return Sm2D.prototype.createVector(this.start,this.end,this.tag);
 } 
 
 /* Various properties */
@@ -94,6 +94,19 @@ Sm2D.Vector.prototype.add = function(vector) {
 Sm2D.Vector.prototype.mult = function(factor) {
     var v2 = Sm2D.prototype.createPoint(this.start.x+factor*this.dx(), this.start.y+factor*this.dy())
     return Sm2D.prototype.createVector(this.start, v2);
+}
+
+/* Vector Normalize */
+Sm2D.Vector.prototype.normalize = function() {
+    var l = this.lenght();
+    if (l==0) console.error("Could not normalize null vector");
+    this.end = Sm2D.prototype.createPoint(this.start.x+this.dx()/l, this.start.y+this.dy()/l);
+}
+
+/* Vector change Lenght */
+Sm2D.Vector.prototype.setLenght = function(lenght) {
+    this.normalize();
+    this.end = Sm2D.prototype.createPoint(this.start.x+this.dx()*lenght, this.start.y+this.dy()*lenght);
 }
 
 /* To String */

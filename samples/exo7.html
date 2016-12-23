@@ -1,0 +1,62 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../dist/sm2d.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<script src="../dist/sm2d.js"></script>
+</head>
+
+<body style="background-color: black; color: #CCC; margin:0px;">
+
+<div class="sm2d controlpanel" id="myControl" style="top: 50px; left: 20px;">
+  <ul>
+  <li>Lenght : <input id="lenght" type="text" value="10"/></li>
+  <li>StartRadius : <input id="StartRadius" type="text" value="nil"/></li>
+  <li>isCCW: <select id="isCCW" value="1"><option value="1">True</option><option value="0">False</option></select></li>
+  <li>isEntry: <select id="isEntry" value="1"><option value="1">True</option><option value="0">False</option></select></li>
+  <li>ClothoideConstant: <input id="ClothoideConstant" type="text" value="5"/></li>
+  </ul>
+  <input value="Clear" type="button" onclick="onClear();" />
+  <input value="Draw" type="button" onclick="onClick();" />
+</div>
+
+
+<center><canvas class="sm2d" id="myCanvas" width="1000" height="1000"></canvas></center>
+
+<textarea class="sm2d" id="myLog" rows="6"></textarea>
+
+<script>
+var ctx = new Sm2D("myCanvas",-10,10,-10,10);
+ctx.attachLog("myLog");
+ctx.addControlPanel("myControl");
+draw();
+
+function onClear() {
+  ctx.clear();
+  ctx.clearLog();
+}
+
+function onClick() {	
+    draw();	
+}
+
+
+function draw() {
+    var lenght = Number(document.getElementById("lenght").value);
+    var startRadius = Number(document.getElementById("StartRadius").value);
+    if (isNaN(startRadius) || startRadius<=0 ) startRadius = null;
+    var isCCW = Number(document.getElementById("isCCW").value);
+    var isEntry = Number( document.getElementById("isEntry").value);
+    var ClothoideConstant = Number(document.getElementById("ClothoideConstant").value);    
+    
+    var v = ctx.createVectorFromDelta(null,0.5,0.5,v);
+    var s = ctx.createSpiralFromRadius(lenght, startRadius, isCCW, isEntry, ClothoideConstant, v);
+    
+    ctx.drawRay(v);
+    ctx.log(s.str());
+    ctx.drawSpiral(s,null,null,true);
+}
+
+</script>
+
+</body>
+</html>

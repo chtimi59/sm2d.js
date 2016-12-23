@@ -1,0 +1,54 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="../dist/sm2d.css">
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<script src="../dist/sm2d.js"></script>
+</head>
+
+<body style="background-color: black; color: #CCC; margin:0px;" oncontextmenu="return false">
+<br>
+<center>
+<canvas class="sm2d" id="myCanvas1" width="500" height="500"></canvas>
+<canvas class="sm2d" id="myCanvas2" width="500" height="500"></canvas>
+</center>
+
+<script>
+var ctx1 = new Sm2D("myCanvas1",-10,10,-10,10);
+var ctx2 = new Sm2D("myCanvas2",-20,20,-10,10);
+
+var lenght = 5;
+var startAngle = 0;
+var stopAngle  = -Math.PI/2;
+draw();
+
+ctx1.mouseMoveListener = function(pt,evt) {
+    var v1 = ctx1.createVector(ctx1.POINTZERO, pt)
+    if (evt.buttons == 1) {
+        startAngle = v1.angle();
+        lenght = v1.lenght();
+        draw();
+    }
+    if (evt.buttons == 2) {
+        stopAngle = v1.angle();
+        lenght = v1.lenght();
+        draw();
+    }
+}
+
+function draw() {
+    var v1 = ctx1.createVectorFromAngle(ctx1.POINTZERO, startAngle, lenght);
+    var v2 = ctx1.createVectorFromAngle(ctx1.POINTZERO, stopAngle,  lenght);
+    var a  = ctx1.createArc(ctx1.POINTZERO, lenght, startAngle, stopAngle);
+    ctx1.clear();
+    ctx1.drawRay(v1,"start");
+    ctx1.drawRay(v2,"stop");
+    ctx1.drawArc(a,null,'yellow');
+    
+    ctx2.clear();
+    ctx2.drawArc(a,null,'pink');
+}
+
+</script>
+
+</body>
+</html>

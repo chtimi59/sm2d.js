@@ -41,7 +41,7 @@ Sm2D.prototype.localCCS2world = function(vector, localPt) {
 	var o = vector.start;
 	var i = vector;
 	var j = vector.rotate(Math.PI/2);
-	return local2world(o,i,j,localPt);
+	return this.local2world(o,i,j,localPt);
 }
 
 
@@ -70,5 +70,5 @@ Sm2D.prototype.world2localCCS = function(vector, worldPt) {
 	var o = vector.start;
 	var i = vector;
 	var j = vector.rotate(Math.PI/2);
-	return world2local(o,i,j,worldPt);
+	return this.world2local(o,i,j,worldPt);
 }

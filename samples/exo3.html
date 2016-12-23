@@ -19,9 +19,7 @@
 </div>
 
 
-<center>
-<canvas class="sm2d" id="myCanvas" width="700" height="700"></canvas>
-</center>
+<center><canvas class="sm2d" id="myCanvas" width="700" height="700"></canvas></center>
 
 <textarea class="sm2d" id="myLog" rows="6"></textarea>
 
@@ -32,6 +30,7 @@ ctx.addControlPanel("myControl");
 
 function onClear() {
   ctx.clear();
+  ctx.clearLog();
 }
 
 function onClick() {	
